@@ -1,0 +1,5 @@
+../Core/Src/main.c:27:5:main	2
+../Core/Src/main.c:48:6:UART2_Init	2
+../Core/Src/main.c:65:6:convert_to_capital	4
+../Core/Src/main.c:77:6:HAL_UART_RxCpltCallback	2
+../Core/Src/main.c:93:6:Error_Handler	1

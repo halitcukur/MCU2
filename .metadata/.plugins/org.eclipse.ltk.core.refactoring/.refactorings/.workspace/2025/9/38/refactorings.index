@@ -1,0 +1,6 @@
+1758286485907	Delete resource 'USART2_IT_Example/Core/it.h'
+1758288982104	Delete resource 'USART2_IT_Example/Core/Inc/main.h'
+1758361950651	Delete resource 'USART2_IT_Example/Core/Inc/stm32f4xx_it.h'
+1758362004084	Delete resource 'USART2_IT_Example/Core/Src/maintemp.c'
+1758362017342	Delete resource 'USART2_IT_Example/Core/Src/stm32f4xx_hal_msp.c'
+1758362627575	Delete resource 'USART2_IT_Example/Core/Src/stm32f4xx_it.c'

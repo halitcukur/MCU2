@@ -1,0 +1,46 @@
+# Derleme çıktıları
+*.o
+*.a
+*.elf
+*.map
+*.bin
+*.hex
+*.out
+*.lst
+
+# Geçici dosyalar
+*.log
+*.tmp
+*.swp
+*.d
+
+# Build klasörleri
+/build/
+/Debug/
+/Release/
+/dist/
+/out/
+
+# IDE ayar dosyaları
+.vscode/
+.idea/
+*.launch
+*.uvprojx
+*.uvoptx
+*.eww
+*.ewd
+*.ewp
+
+# STM32CubeMX otomatik dosyaları
+*.ioc
+
+# Kişisel ayarlar
+*.user
+*.suo
+
+# Python scriptleri varsa cache dosyaları
+__pycache__/
+*.pyc
+
+# Ortam dosyaları
+.env

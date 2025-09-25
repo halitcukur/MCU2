@@ -1,0 +1,14 @@
+/*
+ * main2.c
+ *
+ *  Created on: Sep 19, 2025
+ *      Author: halit
+ */
+
+
+#include "main.h"
+
+int main(void)
+{
+
+}
