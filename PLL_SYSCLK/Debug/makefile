@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := HSE_SYSCLK_8MHZ
+BUILD_ARTIFACT_NAME := PLL_SYSCLK
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-HSE_SYSCLK_8MHZ.elf \
+PLL_SYSCLK.elf \
 
 MAP_FILES += \
-HSE_SYSCLK_8MHZ.map \
+PLL_SYSCLK.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-HSE_SYSCLK_8MHZ.list \
+PLL_SYSCLK.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: HSE_SYSCLK_8MHZ.elf secondary-outputs
+main-build: PLL_SYSCLK.elf secondary-outputs
 
 # Tool invocations
-HSE_SYSCLK_8MHZ.elf HSE_SYSCLK_8MHZ.map: $(OBJS) $(USER_OBJS) /media/halit/C44237EE4237E3B8/Courses/Udemy/04\ Mastering\ Microcontroller\ Timers,\ PWM,\ CAN,\ Low\ Power/00.\ Projects/HSE_SYSCLK_8MHZ/STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "HSE_SYSCLK_8MHZ.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/media/halit/C44237EE4237E3B8/Courses/Udemy/04 Mastering Microcontroller Timers, PWM, CAN, Low Power/00. Projects/HSE_SYSCLK_8MHZ/STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="HSE_SYSCLK_8MHZ.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+PLL_SYSCLK.elf PLL_SYSCLK.map: $(OBJS) $(USER_OBJS) /media/halit/C44237EE4237E3B8/Courses/Udemy/04\ Mastering\ Microcontroller\ Timers,\ PWM,\ CAN,\ Low\ Power/00.\ Projects/PLL_SYSCLK/STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "PLL_SYSCLK.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/media/halit/C44237EE4237E3B8/Courses/Udemy/04 Mastering Microcontroller Timers, PWM, CAN, Low Power/00. Projects/PLL_SYSCLK/STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="PLL_SYSCLK.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-HSE_SYSCLK_8MHZ.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "HSE_SYSCLK_8MHZ.list"
+PLL_SYSCLK.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "PLL_SYSCLK.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) HSE_SYSCLK_8MHZ.elf HSE_SYSCLK_8MHZ.list HSE_SYSCLK_8MHZ.map default.size.stdout
+	-$(RM) PLL_SYSCLK.elf PLL_SYSCLK.list PLL_SYSCLK.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

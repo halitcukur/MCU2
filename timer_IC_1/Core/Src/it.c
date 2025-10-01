@@ -1,0 +1,13 @@
+/*
+ * it.c
+ *
+ *  Created on: Sep 29, 2025
+ *      Author: halit
+ */
+
+#include "main.h"
+
+void SysTick_Handler(void)
+{
+	//HAL_IncTick();
+}

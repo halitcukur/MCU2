@@ -9,4 +9,6 @@
 		<item key="DIALOG_HEIGHT" value="495"/>
 		<item key="DIALOG_FONT_NAME" value="1|Ubuntu Sans|11.0|0|GTK|1|"/>
 	</section>
+	<section name="org.eclipse.ltk.ui.refactoring.settings">
+	</section>
 </section>

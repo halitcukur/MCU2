@@ -3,21 +3,21 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="false"/>
 	<list key="searchhistory">
-		<item value="FLatency"/>
-		<item value="FLASH Latency"/>
-		<item value="RCC_System_Clock_Type"/>
-		<item value="RCC_HSE_Config"/>
-		<item value="RCC_Oscillator_Type"/>
-		<item value="alternate"/>
 		<item value="GPIO_Alternate_function_selection"/>
 		<item value="GPIO_speed_define"/>
 		<item value="GPIO_pull_define"/>
 		<item value="GPIO_mode_define"/>
 		<item value="GPIO_pins_define"/>
-		<item value="UART_Over_Sampling"/>
-		<item value="UART_Hardware_Flow_Control"/>
-		<item value="UART_Mode"/>
-		<item value="UART_Parity"/>
+		<item value="RCC_System_Clock_Source_Status"/>
+		<item value="RCC_System_Clock_Source"/>
+		<item value="RCC_AHB_Clock_Source"/>
+		<item value="RCC_APB1_APB2_Clock_Source"/>
+		<item value="RCC_System_Clock_Type"/>
+		<item value="RCC_PLL_Config"/>
+		<item value="@ref RCC_PLL_Config"/>
+		<item value="RCC_HSICALIBRATION_DEFAULT"/>
+		<item value="RCC_HSI_Config"/>
+		<item value="RCC_HSE_Config"/>
 	</list>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item key="selection" value=""/>

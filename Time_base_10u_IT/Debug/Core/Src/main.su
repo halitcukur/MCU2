@@ -1,0 +1,6 @@
+../Core/Src/main.c:11:5:main	8	static
+../Core/Src/main.c:26:6:TIMER11_Init	8	static
+../Core/Src/main.c:36:6:HAL_TIM_PeriodElapsedCallback	16	static
+../Core/Src/main.c:41:6:GPIO_Init	32	static
+../Core/Src/main.c:55:6:SystemClockConfig	104	static
+../Core/Src/main.c:142:6:Error_Handler	4	static
