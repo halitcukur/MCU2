@@ -1,0 +1,202 @@
+#include "main.h"
+#include <string.h>
+#include <stdio.h>
+
+void SystemClock_Config(void);
+void GPIO_Init(void);
+void TIMER2_Init(void);
+void TIMER4_Init(void);
+void UART2_Init(void);
+
+TIM_HandleTypeDef htimer2;
+TIM_HandleTypeDef htimer4;
+UART_HandleTypeDef huart2;
+
+volatile uint32_t pulse1_value = 25000;
+volatile uint32_t pulse2_value = 12500;
+volatile uint32_t pulse3_value = 6250;
+volatile uint32_t pulse4_value = 3125;
+volatile uint32_t pulse5_value = 25e6;
+
+volatile uint32_t ccr_content;
+
+int main(void)
+{
+	HAL_Init();
+
+	SystemClock_Config();
+	GPIO_Init();
+	UART2_Init();
+	TIMER2_Init();
+	TIMER4_Init();
+
+	if(HAL_TIM_OC_Start_IT(&htimer2, TIM_CHANNEL_1) != HAL_OK)
+		Error_Handler();
+	if(HAL_TIM_OC_Start_IT(&htimer2, TIM_CHANNEL_2) != HAL_OK)
+		Error_Handler();
+	if(HAL_TIM_OC_Start_IT(&htimer2, TIM_CHANNEL_3) != HAL_OK)
+		Error_Handler();
+	if(HAL_TIM_OC_Start_IT(&htimer2, TIM_CHANNEL_4) != HAL_OK)
+		Error_Handler();
+
+	if(HAL_TIM_OC_Start_IT(&htimer4, TIM_CHANNEL_2) != HAL_OK)
+		Error_Handler();
+
+	while(1)
+	{
+
+	}
+}
+
+void SystemClock_Config(void)
+{
+	RCC_OscInitTypeDef osc_init = {0};
+
+	osc_init.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	osc_init.HSEState = RCC_HSE_ON;
+	osc_init.PLL.PLLState = RCC_PLL_ON;
+	osc_init.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	osc_init.PLL.PLLM = 8;
+	osc_init.PLL.PLLN = 200;
+	osc_init.PLL.PLLP = RCC_PLLP_DIV4;
+	osc_init.PLL.PLLQ = 2;
+
+	RCC_ClkInitTypeDef clk_init = {0};
+
+	clk_init.ClockType = RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK |
+			RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	clk_init.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	clk_init.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	clk_init.APB1CLKDivider = RCC_HCLK_DIV2;
+	clk_init.APB2CLKDivider = RCC_HCLK_DIV2;
+
+	if(HAL_RCC_OscConfig(&osc_init) != HAL_OK)
+		Error_Handler();
+
+	if(HAL_RCC_ClockConfig(&clk_init, FLASH_ACR_LATENCY_1WS) != HAL_OK)
+		Error_Handler();
+
+	HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+	HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
+
+	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+}
+
+void GPIO_Init(void)
+{
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+
+	GPIO_InitTypeDef ledgpio = {0};
+
+	ledgpio.Pin = GPIO_PIN_13;
+	ledgpio.Mode = GPIO_MODE_OUTPUT_PP;
+	ledgpio.Pull = GPIO_NOPULL;
+
+	HAL_GPIO_Init(GPIOD, &ledgpio);
+}
+
+void UART2_Init(void)
+{
+	huart2.Instance = USART2;
+	huart2.Init.BaudRate = 115200;
+	huart2.Init.WordLength = UART_WORDLENGTH_8B;
+	huart2.Init.StopBits = UART_STOPBITS_1;
+	huart2.Init.Parity = UART_PARITY_NONE;
+	huart2.Init.Mode = UART_MODE_TX_RX;
+	huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+
+	if(HAL_UART_Init(&huart2) != HAL_OK)
+		Error_Handler();
+}
+
+void TIMER2_Init(void)
+{
+	htimer2.Instance = TIM2;
+	htimer2.Init.Prescaler = 1;
+	htimer2.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htimer2.Init.Period = 0xFFFFFFFF;
+
+	if(HAL_TIM_OC_Init(&htimer2) != HAL_OK)
+		Error_Handler();
+
+	TIM_OC_InitTypeDef tim2OC_Init = {0};
+
+	tim2OC_Init.OCMode = TIM_OCMODE_TOGGLE;
+	tim2OC_Init.OCPolarity = TIM_OCPOLARITY_HIGH;
+
+	tim2OC_Init.Pulse = pulse1_value;
+	if(HAL_TIM_OC_ConfigChannel(&htimer2, &tim2OC_Init, TIM_CHANNEL_1) != HAL_OK)
+		Error_Handler();
+
+	tim2OC_Init.Pulse = pulse2_value;
+	if(HAL_TIM_OC_ConfigChannel(&htimer2, &tim2OC_Init, TIM_CHANNEL_2) != HAL_OK)
+		Error_Handler();
+
+	tim2OC_Init.Pulse = pulse3_value;
+	if(HAL_TIM_OC_ConfigChannel(&htimer2, &tim2OC_Init, TIM_CHANNEL_3) != HAL_OK)
+		Error_Handler();
+
+	tim2OC_Init.Pulse = pulse4_value;
+	if(HAL_TIM_OC_ConfigChannel(&htimer2, &tim2OC_Init, TIM_CHANNEL_4) != HAL_OK)
+		Error_Handler();
+}
+
+void TIMER4_Init(void)
+{
+	htimer4.Instance = TIM4;
+	htimer4.Init.Prescaler = 1;
+	htimer4.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htimer4.Init.Period = 0xFFFFFFFF;
+
+	if(HAL_TIM_OC_Init(&htimer4) != HAL_OK)
+		Error_Handler();
+
+	TIM_OC_InitTypeDef tim4OC_Init = {0};
+
+	tim4OC_Init.OCMode = TIM_OCMODE_TOGGLE;
+	tim4OC_Init.OCPolarity = TIM_OCPOLARITY_HIGH;
+	tim4OC_Init.Pulse = pulse5_value;
+
+	if(HAL_TIM_OC_ConfigChannel(&htimer4, &tim4OC_Init, TIM_CHANNEL_2) != HAL_OK)
+		Error_Handler();
+
+}
+
+void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+	{
+		ccr_content = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+		__HAL_TIM_SET_COMPARE(htim, TIM_CHANNEL_1, ccr_content + pulse1_value);
+	}
+
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
+	{
+		ccr_content = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
+		__HAL_TIM_SET_COMPARE(htim, TIM_CHANNEL_2, ccr_content + pulse2_value);
+	}
+
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
+	{
+		ccr_content = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+		__HAL_TIM_SET_COMPARE(htim, TIM_CHANNEL_3, ccr_content + pulse3_value);
+	}
+
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
+	{
+		ccr_content = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);
+		__HAL_TIM_SET_COMPARE(htim, TIM_CHANNEL_4, ccr_content + pulse4_value);
+	}
+	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
+	{
+		ccr_content = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
+		__HAL_TIM_SET_COMPARE(htim, TIM_CHANNEL_2, ccr_content + pulse5_value);
+	}
+}
+
+void Error_Handler(void)
+{
+	__disable_irq();
+	while(1);
+}
