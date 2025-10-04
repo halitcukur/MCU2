@@ -1,0 +1,139 @@
+/* Includes ------------------------------------------------*/
+#include "main.h"
+
+/* Private function prototypes -----------------------------*/
+void TIMER2_Init(void);
+void TIMER4_Init(void);
+void SystemClock_Config(void);
+
+/* Private variables ---------------------------------------*/
+TIM_HandleTypeDef htimer2;
+TIM_HandleTypeDef htimer4;
+volatile uint16_t i;
+
+int main(void)
+{
+	HAL_Init();
+
+	SystemClock_Config();
+	TIMER2_Init();
+	TIMER4_Init();
+
+	if(HAL_TIM_PWM_Start(&htimer2, TIM_CHANNEL_1) != HAL_OK)
+		Error_Handler();
+	if(HAL_TIM_PWM_Start(&htimer2, TIM_CHANNEL_2) != HAL_OK)
+		Error_Handler();
+	if(HAL_TIM_PWM_Start(&htimer2, TIM_CHANNEL_3) != HAL_OK)
+		Error_Handler();
+	if(HAL_TIM_PWM_Start(&htimer4, TIM_CHANNEL_4) != HAL_OK)
+		Error_Handler();
+
+	while(1)
+	{
+		for(i; i < htimer4.Init.Period; i++)
+		{
+			__HAL_TIM_SET_COMPARE(&htimer4, TIM_CHANNEL_4, i);
+			HAL_Delay(10);
+		}
+
+		for(i; i > 0; i--)
+		{
+			__HAL_TIM_SET_COMPARE(&htimer4, TIM_CHANNEL_4, i);
+			HAL_Delay(10);
+		}
+	}
+
+	return 0;
+}
+
+void Error_Handler(void)
+{
+	__disable_irq();
+	while(1);
+}
+
+void SystemClock_Config(void)
+{
+	/*
+	 * HCLK 	---> 50 MHz
+	 * APB1CLK 	---> 25 MHz
+	 * APB2CLK 	---> 25 MHZ
+	 */
+
+	RCC_OscInitTypeDef osc_init = {0};
+
+	osc_init.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	osc_init.HSEState = RCC_HSE_ON;
+	osc_init.PLL.PLLState = RCC_PLL_ON;
+	osc_init.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	osc_init.PLL.PLLM = 8;
+	osc_init.PLL.PLLN = 200;
+	osc_init.PLL.PLLP = 4;
+
+	if(HAL_RCC_OscConfig(&osc_init) != HAL_OK)
+		Error_Handler();
+
+	RCC_ClkInitTypeDef clk_init = {0};
+
+	clk_init.ClockType = RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK |
+						RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	clk_init.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	clk_init.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	clk_init.APB1CLKDivider = RCC_HCLK_DIV2;
+	clk_init.APB2CLKDivider = RCC_HCLK_DIV2;
+
+	if(HAL_RCC_ClockConfig(&clk_init, FLASH_ACR_LATENCY_1WS) != HAL_OK)
+		Error_Handler();
+
+	HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+	if(HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000) != HAL_OK)
+		Error_Handler();
+}
+
+void TIMER2_Init(void)
+{
+	htimer2.Instance = TIM2;
+	htimer2.Init.Prescaler = 49;		// 1MHz 1us
+	htimer2.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htimer2.Init.Period = 1E6 - 1;		// 1s
+
+	if(HAL_TIM_PWM_Init(&htimer2) != HAL_OK)
+		Error_Handler();
+
+	TIM_OC_InitTypeDef tim2PWM_Config = {0};
+
+	tim2PWM_Config.OCMode = TIM_OCMODE_PWM1;
+	tim2PWM_Config.OCPolarity = TIM_OCPOLARITY_HIGH;
+
+	tim2PWM_Config.Pulse = htimer2.Init.Period * 0.25;
+	if(HAL_TIM_PWM_ConfigChannel(&htimer2, &tim2PWM_Config, TIM_CHANNEL_1) != HAL_OK)
+		Error_Handler();
+
+	tim2PWM_Config.Pulse = htimer2.Init.Period * 0.5;
+	if(HAL_TIM_PWM_ConfigChannel(&htimer2, &tim2PWM_Config, TIM_CHANNEL_2) != HAL_OK)
+		Error_Handler();
+
+	tim2PWM_Config.Pulse = htimer2.Init.Period * 0.75;
+	if(HAL_TIM_PWM_ConfigChannel(&htimer2, &tim2PWM_Config, TIM_CHANNEL_3) != HAL_OK)
+		Error_Handler();
+}
+
+void TIMER4_Init(void)
+{
+	htimer4.Instance = TIM4;
+	htimer4.Init.Prescaler = 4999;		// 10 kHz 100us
+	htimer4.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htimer4.Init.Period = 10 - 1;	// 1s
+
+	if(HAL_TIM_PWM_Init(&htimer4) != HAL_OK)
+		Error_Handler();
+
+	TIM_OC_InitTypeDef tim4PWM_Config = {0};
+
+	tim4PWM_Config.OCMode = TIM_OCMODE_PWM1;
+	tim4PWM_Config.OCPolarity = TIM_OCPOLARITY_HIGH;
+	tim4PWM_Config.Pulse = 0;
+
+	if(HAL_TIM_PWM_ConfigChannel(&htimer4, &tim4PWM_Config, TIM_CHANNEL_4) != HAL_OK)
+		Error_Handler();
+}
