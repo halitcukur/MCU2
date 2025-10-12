@@ -1,0 +1,35 @@
+#include "main.h"
+
+void SystemClock_Config(void);
+static void GPIO_Init(void);
+static void USART1_UART_Init(void);
+
+int main(void)
+{
+	HAL_Init();
+
+	SystemClock_Config();
+
+	while(1);
+}
+
+void SystemClock_Config(void)
+{
+
+}
+
+static void USART1_UART_Init(void)
+{
+
+}
+
+static void GPIO_Init(void)
+{
+
+}
+
+void Error_Handler(void)
+{
+	__disable_irq();
+	while(1);
+}

@@ -1,0 +1,90 @@
+#include "main.h"
+#include <string.h>
+
+void SystemClock_Config(void);
+static void GPIO_Init(void);
+static void USART1_UART_Init(void);
+
+UART_HandleTypeDef huart1 = {0};
+
+extern uint8_t data[100];
+
+int main(void)
+{
+	HAL_Init();
+
+	SystemClock_Config();
+	GPIO_Init();
+	USART1_UART_Init();
+
+	while(1);
+}
+
+void SystemClock_Config(void)
+{
+	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
+
+	RCC_OscInitTypeDef osc_init = {0};
+
+	osc_init.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+	osc_init.HSIState = RCC_HSI_ON;
+	osc_init.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+	osc_init.PLL.PLLState = RCC_PLL_NONE;
+
+	if(HAL_RCC_OscConfig(&osc_init) != HAL_OK)
+		Error_Handler();
+
+	RCC_ClkInitTypeDef clk_init = {0};
+
+	clk_init.ClockType = RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK |
+						RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	clk_init.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+	clk_init.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	clk_init.APB1CLKDivider = RCC_HCLK_DIV1;
+	clk_init.APB2CLKDivider = RCC_HCLK_DIV1;
+
+	if(HAL_RCC_ClockConfig(&clk_init, FLASH_ACR_LATENCY_0WS))
+		Error_Handler();
+}
+
+static void USART1_UART_Init(void)
+{
+	huart1.Instance = USART1;
+	huart1.Init.BaudRate = 460800;
+	huart1.Init.WordLength = UART_WORDLENGTH_8B;
+	huart1.Init.StopBits = UART_STOPBITS_1;
+	huart1.Init.Parity = UART_PARITY_NONE;
+	huart1.Init.Mode = UART_MODE_TX;
+	huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+
+	if(HAL_UART_Init(&huart1) != HAL_OK)
+		Error_Handler();
+}
+
+static void GPIO_Init(void)
+{
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+
+	GPIO_InitTypeDef gpio_init = {0};
+
+	gpio_init.Pin = GPIO_PIN_0;
+	gpio_init.Mode = GPIO_MODE_IT_RISING;
+	gpio_init.Pull = GPIO_PULLDOWN;
+	gpio_init.Speed = GPIO_SPEED_FREQ_MEDIUM;
+
+	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+	HAL_GPIO_Init(GPIOA, &gpio_init);
+}
+
+void Error_Handler(void)
+{
+	__disable_irq();
+	while(1);
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	HAL_UART_Transmit(&huart1, (uint8_t *) data, (uint16_t) strlen(data), HAL_MAX_DELAY);
+}

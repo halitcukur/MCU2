@@ -1,0 +1,32 @@
+#include "main.h"
+
+void HAL_MspInit(void)
+{
+	__HAL_RCC_SYSCFG_CLK_ENABLE();
+	__HAL_RCC_PWR_CLK_ENABLE();
+
+	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+}
+
+void HAL_UART_MspInit(UART_HandleTypeDef* huart)
+{
+	__HAL_RCC_USART1_CLK_ENABLE();
+	__HAL_RCC_USART1_CLK_SLEEP_DISABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_SLEEP_DISABLE();
+
+	GPIO_InitTypeDef uart_gpio = {0};
+
+	uart_gpio.Pin = GPIO_PIN_6;
+	uart_gpio.Mode = GPIO_MODE_AF_PP;
+	uart_gpio.Pull = GPIO_NOPULL;
+	uart_gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
+	uart_gpio.Alternate = GPIO_AF7_USART1;
+
+	HAL_GPIO_Init(GPIOB, &uart_gpio);
+}
+
+void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
+{
+	__HAL_RCC_USART1_CLK_DISABLE();
+}
