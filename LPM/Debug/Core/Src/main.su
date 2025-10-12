@@ -1,0 +1,9 @@
+../Core/Src/main.c:15:5:main	8	static
+../Core/Src/main.c:34:6:SystemClock_Config	88	static
+../Core/Src/main.c:71:13:TIM11_Init	8	static
+../Core/Src/main.c:86:13:USART1_UART_Init	8	static
+../Core/Src/main.c:103:13:GPIO_Init	32	static
+../Core/Src/main.c:118:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:124:6:HAL_TIM_PeriodElapsedCallback	16	static
+../Core/Src/main.c:129:6:printClockInfo	112	static
+../Core/Src/main.c:149:6:GPIO_AnalogConfig	32	static

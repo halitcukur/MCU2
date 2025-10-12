@@ -60,8 +60,8 @@ all: main-build
 main-build: Time_base_10u_IT.elf secondary-outputs
 
 # Tool invocations
-Time_base_10u_IT.elf Time_base_10u_IT.map: $(OBJS) $(USER_OBJS) /media/halit/C44237EE4237E3B8/Courses/Udemy/04\ Mastering\ Microcontroller\ Timers,\ PWM,\ CAN,\ Low\ Power/00.\ Projects/Time_base_10u_IT/STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Time_base_10u_IT.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/media/halit/C44237EE4237E3B8/Courses/Udemy/04 Mastering Microcontroller Timers, PWM, CAN, Low Power/00. Projects/Time_base_10u_IT/STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Time_base_10u_IT.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Time_base_10u_IT.elf Time_base_10u_IT.map: $(OBJS) $(USER_OBJS) D:\Courses\Udemy\04\ Mastering\ Microcontroller\ Timers,\ PWM,\ CAN,\ Low\ Power\00.\ Projects\Time_base_10u_IT\STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Time_base_10u_IT.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Courses\Udemy\04 Mastering Microcontroller Timers, PWM, CAN, Low Power\00. Projects\Time_base_10u_IT\STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Time_base_10u_IT.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
